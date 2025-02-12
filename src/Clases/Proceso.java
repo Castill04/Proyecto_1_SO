@@ -1,29 +1,27 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package Clases;
 
 /**
  *
- * @author casti
+ * @author Ignacio
  */
-public class Proceso {
-    
-    private int id;
+public class Proceso extends Thread {
     private String nombre;
-    private String estado; // Running, Blocked, Ready
     private int instrucciones;
-    private boolean cpuBound;
+    private Boolean esCpuBound;
     private int ciclosExcepcion;
-    private int ciclosCompletarExcepcion;
+    private int ciclosEspera;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public Proceso(String nombre, int instrucciones, Boolean esCpuBound, int ciclosExcepcion, int ciclosEspera) {
+        this.nombre = nombre;
+        this.instrucciones = instrucciones;
+        this.esCpuBound = esCpuBound;
+        this.ciclosExcepcion = ciclosExcepcion;
+        this.ciclosEspera = ciclosEspera;
     }
 
     public String getNombre() {
@@ -34,14 +32,6 @@ public class Proceso {
         this.nombre = nombre;
     }
 
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
     public int getInstrucciones() {
         return instrucciones;
     }
@@ -50,12 +40,12 @@ public class Proceso {
         this.instrucciones = instrucciones;
     }
 
-    public boolean isCpuBound() {
-        return cpuBound;
+    public Boolean getEsCpuBound() {
+        return esCpuBound;
     }
 
-    public void setCpuBound(boolean cpuBound) {
-        this.cpuBound = cpuBound;
+    public void setEsCpuBound(Boolean esCpuBound) {
+        this.esCpuBound = esCpuBound;
     }
 
     public int getCiclosExcepcion() {
@@ -66,14 +56,12 @@ public class Proceso {
         this.ciclosExcepcion = ciclosExcepcion;
     }
 
-    public int getCiclosCompletarExcepcion() {
-        return ciclosCompletarExcepcion;
+    public int getCiclosEspera() {
+        return ciclosEspera;
     }
 
-    public void setCiclosCompletarExcepcion(int ciclosCompletarExcepcion) {
-        this.ciclosCompletarExcepcion = ciclosCompletarExcepcion;
+    public void setCiclosEspera(int ciclosEspera) {
+        this.ciclosEspera = ciclosEspera;
     }
-    
-    
     
 }
