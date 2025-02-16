@@ -15,6 +15,7 @@ public class Proceso extends Thread {
     private Boolean esCpuBound;
     private int ciclosExcepcion;
     private int ciclosEspera;
+    private int programCounter = 0;
 
     public Proceso(String nombre, int instrucciones, Boolean esCpuBound, int ciclosExcepcion, int ciclosEspera) {
         this.nombre = nombre;
@@ -63,5 +64,7 @@ public class Proceso extends Thread {
     public void setCiclosEspera(int ciclosEspera) {
         this.ciclosEspera = ciclosEspera;
     }
+    
+    
     
 }
