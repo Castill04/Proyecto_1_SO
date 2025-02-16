@@ -10,6 +10,7 @@ import java.io.*;
  *
  * @author casti
  */
+
 public class Configuracion {
     private String rutaArchivo;
 
