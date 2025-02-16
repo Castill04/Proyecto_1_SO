@@ -5,7 +5,10 @@ package Interfaz;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import Clases.Cola;
 import Clases.Configuracion;
+import Clases.Proceso;
+import Clases.SistemaOperativo;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -264,6 +267,15 @@ public class Menu extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                Cola<Proceso> procesosListos = new Cola<>();
+
+                procesosListos.enqueue(new Proceso(1, "P1", 10, true, 0, 0));
+                procesosListos.enqueue(new Proceso(2, "P2", 15, false, 3, 2));
+                procesosListos.enqueue(new Proceso(3, "P3", 8, true, 0, 0));
+                procesosListos.enqueue(new Proceso(4, "P4", 12, false, 4, 3));
+
+                SistemaOperativo so = new SistemaOperativo(2, procesosListos);
+                so.iniciar();
                 new Menu().setVisible(true);
             }
         });

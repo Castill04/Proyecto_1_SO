@@ -8,6 +8,8 @@ package Clases;
  *
  * @author casti
  */
+
+/**
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -23,7 +25,7 @@ public class Simulador {
 
     public Simulador(Configuracion configuration) {
         this.configuration = configuration;
-        this.processors = configuration.getProcessors();
+        //this.processors = configuration.getProcessors();
         this.readyQueue = new Cola<>();
         this.blockedQueue = new Cola<>();
         this.globalClock = 0;
@@ -47,7 +49,7 @@ public class Simulador {
                 semaphore.release();
 
                 // Hacer sleep por un ciclo
-                Thread.sleep(configuration.getCycleDuration());
+                //Thread.sleep(configuration.getCycleDuration());
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -61,7 +63,7 @@ public class Simulador {
 
     public void updateConfiguration(Configuracion config) {
         this.configuration = config;
-        this.processors = config.getProcessors();
+        //this.processors = config.getProcessors();
     }
 
     // public void loadConfiguration(String filePath) {
@@ -98,3 +100,4 @@ public class Simulador {
         return configuration;
     }
 }
+*/

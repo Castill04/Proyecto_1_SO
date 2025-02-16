@@ -10,23 +10,23 @@ package Clases;
  * @author Ignacio
  */
 public class PCB {
-    private int id; 
+    private long id; 
     private String estado; 
     private int programCounter; 
     private int mar;  
-    private int totalInstrucciones; 
-    private Proceso proceso;  
+    private int totalInstrucciones;  
+    private String nombre;
 
-    public PCB(int id, Proceso proceso) {
+    public PCB(long id, int totalInstrucciones, String nombre) {
         this.id = id;
-        this.proceso = proceso;
-        this.estado = "Ready"; 
+        this.estado = "Listo"; 
         this.programCounter = 0;
         this.mar = 0;
-        this.totalInstrucciones = proceso.getInstrucciones();
+        this.totalInstrucciones = totalInstrucciones;
+        this.nombre = nombre;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -64,14 +64,6 @@ public class PCB {
 
     public void setTotalInstrucciones(int totalInstrucciones) {
         this.totalInstrucciones = totalInstrucciones;
-    }
-
-    public Proceso getProceso() {
-        return proceso;
-    }
-
-    public void setProceso(Proceso proceso) {
-        this.proceso = proceso;
     }
     
     public void cambiarEstado(String nuevoEstado) {

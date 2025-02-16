@@ -10,7 +10,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author casti
  */
-public class Procesador extends Thread {
+        /**
+public class Procesador {
     private static int idCounter = 0;
     private final int id;
     private Proceso currentProcess;
@@ -24,7 +25,7 @@ public class Procesador extends Thread {
         this.simulator = simulator;
     }
 
-    @Override
+
     public void run() {
         while (true) {
             try {
@@ -43,7 +44,7 @@ public class Procesador extends Thread {
                 simulator.getSemaphore().release();
 
                 // Sleep por un ciclo
-                Thread.sleep(simulator.getConfiguration().getCycleDuration());
+                //Thread.sleep(simulator.getConfiguration().getCycleDuration());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -75,3 +76,4 @@ public class Procesador extends Thread {
     //    return id;
     //}
 }
+*/

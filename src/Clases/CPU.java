@@ -8,37 +8,37 @@ package Clases;
  *
  * @author casti
  */
+
+
+import java.util.concurrent.Semaphore;
+
 public class CPU {
-    
     private int id;
     private Proceso procesoActual;
-    private boolean ejecutandoSO;
+    public Semaphore mutex;
+
+    public CPU(int id) {
+        this.id = id;
+        this.procesoActual = null;
+        this.mutex = new Semaphore(1);
+    }
+
+    public void ejecutarProceso(Proceso proceso) {
+        this.procesoActual = proceso;
+        System.out.println("🖥️ CPU " + id + " ejecutando proceso " + proceso.getNombre());
+        proceso.start();
+    }
+
+    public void liberarCPU() {
+        System.out.println("✅ CPU " + id + " ha terminado el proceso " + (procesoActual != null ? procesoActual.getNombre() : "N/A"));
+        this.procesoActual = null;
+    }
+
+    public boolean estaLibre() {
+        return procesoActual == null;
+    }
 
     public int getId() {
         return id;
     }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Proceso getProcesoActual() {
-        return procesoActual;
-    }
-
-    public void setProcesoActual(Proceso procesoActual) {
-        this.procesoActual = procesoActual;
-    }
-
-    public boolean isEjecutandoSO() {
-        return ejecutandoSO;
-    }
-
-    public void setEjecutandoSO(boolean ejecutandoSO) {
-        this.ejecutandoSO = ejecutandoSO;
-    }
-    
-    
-
-    
 }
