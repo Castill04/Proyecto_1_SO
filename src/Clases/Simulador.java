@@ -64,16 +64,16 @@ public class Simulador {
         this.processors = config.getProcessors();
     }
 
-    public void loadConfiguration(String filePath) {
-        Configuracion config = Configuracion.loadFromFile(filePath);
-        if (config != null) {
-            updateConfiguration(config);
-        }
-    }
+    // public void loadConfiguration(String filePath) {
+    //    Configuracion config = Configuracion.loadFromFile(filePath);
+    //    if (config != null) {
+    //        updateConfiguration(config);
+    //    }
+    //}
 
-    public void saveConfiguration(String filePath) {
-        configuration.saveToFile(filePath);
-    }
+    //public void saveConfiguration(String filePath) {
+    //    configuration.saveToFile(filePath);
+    //}
 
     private void updateProcessors() {
         for (int i = 0; i < processors.size(); i++) {
