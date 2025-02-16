@@ -1,13 +1,15 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package Clases;
 
 /**
  *
- * @author casti
+ * @author Ignacio
  */
+
 public class Proceso {
     private int id;
     private String name;
@@ -62,10 +64,6 @@ public class Proceso {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -84,18 +82,20 @@ public class Proceso {
 
     public int getMar() {
         return mar;
+
     }
 
     public void setMar(int mar) {
         this.mar = mar;
     }
-
+  
     public int getInstructions() {
         return instructions;
     }
 
     public void setInstructions(int instructions) {
         this.instructions = instructions;
+
     }
 
     public boolean isIsCpuBound() {
@@ -112,6 +112,7 @@ public class Proceso {
 
     public void setIoExceptionCycle(int ioExceptionCycle) {
         this.ioExceptionCycle = ioExceptionCycle;
+
     }
 
     public int getIoCompletionCycle() {
