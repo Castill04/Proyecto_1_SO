@@ -9,14 +9,54 @@ package Clases;
  * @author casti
  */
 public class Proceso {
-    
     private int id;
-    private String nombre;
-    private String estado; // Running, Blocked, Ready
-    private int instrucciones;
-    private boolean cpuBound;
-    private int ciclosExcepcion;
-    private int ciclosCompletarExcepcion;
+    private String name;
+    private int pc; // Program Counter
+    private int mar; // Memory Address Register
+    private int instructions;
+    private boolean isCpuBound;
+    private int ioExceptionCycle;
+    private int ioCompletionCycle;
+    private String status;
+
+    public Proceso(int id, String name, int instructions, boolean isCpuBound, int ioExceptionCycle, int ioCompletionCycle) {
+        this.id = id;
+        this.name = name;
+        this.pc = 0;
+        this.mar = 0;
+        this.instructions = instructions;
+        this.isCpuBound = isCpuBound;
+        this.ioExceptionCycle = ioExceptionCycle;
+        this.ioCompletionCycle = ioCompletionCycle;
+        this.status = "LISTO";
+    }
+
+    public void executeInstruction(long globalClock) {
+        // Logica de ejecucion de una instruccion
+        // Actualizar pc y mar
+        pc++;
+        mar++;
+
+        // Verificar si esta limitado por E/S o por el CPU
+        if (isCpuBound) {
+            // Logica CPU
+        } else {
+            // Logica E/S
+            if (globalClock % ioExceptionCycle == 0) {
+                // Excepcion E/S
+                status = "BLOQUEADO";
+            }
+        }
+
+        // Verificar si el proceso ha terminado
+        if (pc >= instructions) {
+            status = "COMPLETADO";
+        }
+    }
+
+    public boolean isCompleted() {
+        return "COMPLETADO".equals(status);
+    }
 
     public int getId() {
         return id;
@@ -26,54 +66,69 @@ public class Proceso {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getEstado() {
-        return estado;
+    public int getPc() {
+        return pc;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setPc(int pc) {
+        this.pc = pc;
     }
 
-    public int getInstrucciones() {
-        return instrucciones;
+    public int getMar() {
+        return mar;
     }
 
-    public void setInstrucciones(int instrucciones) {
-        this.instrucciones = instrucciones;
+    public void setMar(int mar) {
+        this.mar = mar;
     }
 
-    public boolean isCpuBound() {
-        return cpuBound;
+    public int getInstructions() {
+        return instructions;
     }
 
-    public void setCpuBound(boolean cpuBound) {
-        this.cpuBound = cpuBound;
+    public void setInstructions(int instructions) {
+        this.instructions = instructions;
     }
 
-    public int getCiclosExcepcion() {
-        return ciclosExcepcion;
+    public boolean isIsCpuBound() {
+        return isCpuBound;
     }
 
-    public void setCiclosExcepcion(int ciclosExcepcion) {
-        this.ciclosExcepcion = ciclosExcepcion;
+    public void setIsCpuBound(boolean isCpuBound) {
+        this.isCpuBound = isCpuBound;
     }
 
-    public int getCiclosCompletarExcepcion() {
-        return ciclosCompletarExcepcion;
+    public int getIoExceptionCycle() {
+        return ioExceptionCycle;
     }
 
-    public void setCiclosCompletarExcepcion(int ciclosCompletarExcepcion) {
-        this.ciclosCompletarExcepcion = ciclosCompletarExcepcion;
+    public void setIoExceptionCycle(int ioExceptionCycle) {
+        this.ioExceptionCycle = ioExceptionCycle;
     }
-    
-    
+
+    public int getIoCompletionCycle() {
+        return ioCompletionCycle;
+    }
+
+    public void setIoCompletionCycle(int ioCompletionCycle) {
+        this.ioCompletionCycle = ioCompletionCycle;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     
 }

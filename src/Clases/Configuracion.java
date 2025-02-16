@@ -4,22 +4,52 @@
  */
 package Clases;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
  * @author casti
  */
-public class Configuracion {
-    
-    public void guardarConfiguracion(String archivo, Map<String, String> config) {
-        // Guardar configuración en archivo
+import java.io.*;
+
+public class Configuracion implements Serializable {
+    private int cycleDuration;
+    private Lista<Procesador> processors;
+
+    public Configuracion(int cycleDuration, Lista<Procesador> processors) {
+        this.cycleDuration = cycleDuration;
+        this.processors = processors;
     }
 
-    public Map<String, String> cargarConfiguracion(String archivo) {
-        // Cargar configuración desde archivo
-        return new HashMap<>();
+    public int getCycleDuration() {
+        return cycleDuration;
     }
-    
+
+    public void setCycleDuration(int cycleDuration) {
+        this.cycleDuration = cycleDuration;
+    }
+
+    public Lista<Procesador> getProcessors() {
+        return processors;
+    }
+
+    public void setProcessors(Lista<Procesador> processors) {
+        this.processors = processors;
+    }
+
+    public static Configuracion loadFromFile(String filePath) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
+            return (Configuracion) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void saveToFile(String filePath) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
+            oos.writeObject(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
