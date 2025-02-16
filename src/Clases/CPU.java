@@ -28,10 +28,15 @@ public class CPU {
         System.out.println("🖥️ CPU " + id + " ejecutando proceso " + proceso.getNombre());
         proceso.start();
     }
+    
+    public void adquirirCPU() throws InterruptedException {
+        mutex.acquire();
+    }
 
     public void liberarCPU() {
         System.out.println("✅ CPU " + id + " ha terminado el proceso " + (procesoActual != null ? procesoActual.getNombre() : "N/A"));
         this.procesoActual = null;
+        mutex.release();
     }
 
     public boolean estaLibre() {

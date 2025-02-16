@@ -41,22 +41,14 @@ public class SistemaOperativo {
     }    
     
     public void AsignarProceso() {
-        while (procesosListos.isEmpty() != true){
-            try {
-                semaforoCPU.acquire();
-                Proceso proceso = procesosListos.dequeue();
-                CPU cpuLibre = obtenerCPUDisponible();
-                
-                if (cpuLibre != null && proceso != null) {
-                    proceso.asignarCPU(cpuLibre);
-                } else {
-                    procesosListos.enqueue(proceso);
-                }
+        while (!procesosListos.isEmpty()) {
+            Proceso proceso = procesosListos.dequeue();
+            CPU cpuLibre = obtenerCPUDisponible();
 
-                semaforoCPU.release();
-                
-            } catch (InterruptedException e){
-                e.printStackTrace();
+            if (cpuLibre != null) {
+                proceso.asignarCPU(cpuLibre);
+            } else {
+                procesosListos.enqueue(proceso);
             }
         }
     }

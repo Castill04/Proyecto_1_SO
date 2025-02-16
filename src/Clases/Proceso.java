@@ -37,8 +37,14 @@ public class Proceso extends Thread {
 
     @Override
     public void run() {
-        while (instruccionesRestantes > 0) {
-            try {
+        if (cpuAsignada == null) {
+            return;
+        }
+        try {
+            cpuAsignada.adquirirCPU();
+            estado = "Running";
+
+            while (instruccionesRestantes > 0) {
                 System.out.println("🔹 Proceso " + nombre + " ejecutando en CPU " + cpuAsignada.getId() + " - Instrucciones restantes: " + instruccionesRestantes);
                 Thread.sleep(1000);
                 instruccionesRestantes--;
@@ -49,15 +55,17 @@ public class Proceso extends Thread {
                     cpuAsignada.liberarCPU();
                     return;
                 }
-
-            } catch (InterruptedException e) {
-                System.out.println("⚠️ Proceso " + nombre + " interrumpido.");
             }
-        }
 
+            estado = "Terminated";
+            System.out.println("✅ Proceso " + nombre + " ha finalizado.");
+            cpuAsignada.liberarCPU();
+
+        } catch (InterruptedException e) {
+            System.out.println("⚠️ Proceso " + nombre + " interrumpido.");
+        }
         estado = "Terminated";
         System.out.println("✅ Proceso " + nombre + " ha finalizado.");
-        cpuAsignada.liberarCPU();
     }
 
     public boolean estaBloqueado() {
