@@ -4,7 +4,7 @@
  */
 package Clases;
 
-import java.util.List;
+
 
 /**
  *
@@ -12,8 +12,6 @@ import java.util.List;
  */
 public class Graficos {
     
-    public void mostrarGrafico(List<Double> datos) {
-        // Utilizar JFreeChart para mostrar gráfico
-    }
+    
     
 }

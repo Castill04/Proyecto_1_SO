@@ -4,7 +4,6 @@
  */
 package Clases;
 
-import java.util.List;
 
 /**
  *
@@ -12,15 +11,6 @@ import java.util.List;
  */
 public class Metricas {
     
-    private List<Double> rendimientoCPU;
-    private List<Double> rendimientoSistema;
-
-    public void registrarRendimientoCPU(double rendimiento) {
-        rendimientoCPU.add(rendimiento);
-    }
-
-    public void registrarRendimientoSistema(double rendimiento) {
-        rendimientoSistema.add(rendimiento);
-    }
+    
     
 }

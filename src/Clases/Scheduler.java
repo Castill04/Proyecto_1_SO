@@ -4,23 +4,22 @@
  */
 package Clases;
 
-import java.util.List;
-
 /**
  *
  * @author casti
  */
-public class Scheduler {
+public abstract class Scheduler {
 
-    private List<Proceso> colaListos;
-    private String politica; // FCFS, SJF, Round Robin
+    protected Cola<Proceso> readyQueue;
 
-    public void agregarProceso(Proceso proceso) {
-        colaListos.add(proceso);
+    public Scheduler(Cola<Proceso> readyQueue) {
+        this.readyQueue = readyQueue;
     }
 
-    //public void Proceso siguienteProceso() {
-        // Implementar lógica de planificación según la política
-    //}
+    public abstract Proceso getNextProcess();
+
+    public void addProcess(Proceso process) {
+        readyQueue.enqueue(process);
+    }
 
 }
