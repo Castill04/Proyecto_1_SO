@@ -103,6 +103,36 @@ public class Menu extends javax.swing.JFrame {
     private void initComponents() {
 
         btnConfigurar = new javax.swing.JButton();
+        jTabbedPane2 = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextPane1 = new javax.swing.JTextPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextPane2 = new javax.swing.JTextPane();
+        jLabel11 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextPane3 = new javax.swing.JTextPane();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        textField1 = new java.awt.TextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        textField2 = new java.awt.TextField();
+        jLabel5 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        textField3 = new java.awt.TextField();
+        textField4 = new java.awt.TextField();
+        jLabel9 = new javax.swing.JLabel();
+        textField5 = new java.awt.TextField();
+        button1 = new java.awt.Button();
+        jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         txtCiclosCompletarExcepcion = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
@@ -128,20 +158,151 @@ public class Menu extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jPanel1.setLayout(null);
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel10.setText("Sistema Operativo");
+        jPanel1.add(jLabel10);
+        jLabel10.setBounds(10, 10, 160, 30);
+
+        jScrollPane1.setViewportView(jTextPane1);
+
+        jPanel1.add(jScrollPane1);
+        jScrollPane1.setBounds(450, 270, 220, 140);
+
+        jScrollPane2.setViewportView(jTextPane2);
+
+        jPanel1.add(jScrollPane2);
+        jScrollPane2.setBounds(450, 60, 220, 140);
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel11.setText("Cola de listos");
+        jPanel1.add(jLabel11);
+        jLabel11.setBounds(510, 20, 110, 30);
+
+        jScrollPane3.setViewportView(jTextPane3);
+
+        jPanel1.add(jScrollPane3);
+        jScrollPane3.setBounds(10, 340, 390, 120);
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel12.setText("Cola de bloqueados");
+        jPanel1.add(jLabel12);
+        jLabel12.setBounds(480, 230, 160, 30);
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel13.setText("Procesos activos");
+        jPanel1.add(jLabel13);
+        jLabel13.setBounds(10, 300, 160, 30);
+
+        jTabbedPane2.addTab("Dashboard", jPanel1);
+
+        jPanel2.setLayout(null);
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel1.setText("Crear Proceso");
+        jPanel2.add(jLabel1);
+        jLabel1.setBounds(20, 20, 160, 25);
+
+        jLabel2.setText("Número de ciclos para satisfacer operaciones mediante interrupts:");
+        jPanel2.add(jLabel2);
+        jLabel2.setBounds(30, 300, 360, 16);
+
+        textField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textField1ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(textField1);
+        textField1.setBounds(240, 120, 40, 20);
+
+        jLabel3.setText("Nombre:");
+        jPanel2.add(jLabel3);
+        jLabel3.setBounds(30, 70, 50, 16);
+
+        jLabel4.setText("Nombre:");
+        jPanel2.add(jLabel4);
+        jLabel4.setBounds(30, 70, 50, 16);
+
+        textField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textField2ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(textField2);
+        textField2.setBounds(90, 70, 190, 20);
+
+        jLabel5.setText("Longitud (Cantidad de Instrucciones):");
+        jPanel2.add(jLabel5);
+        jLabel5.setBounds(30, 120, 210, 16);
+
+        jButton1.setText("Dependiente de E/S");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton1);
+        jButton1.setBounds(300, 180, 150, 30);
+
+        jButton2.setText("Dependiente de CPU");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton2);
+        jButton2.setBounds(120, 180, 150, 30);
+
+        jLabel6.setText("Dependencia:");
+        jPanel2.add(jLabel6);
+        jLabel6.setBounds(30, 180, 210, 16);
+
+        jLabel8.setText("Prioridad:");
+        jPanel2.add(jLabel8);
+        jLabel8.setBounds(30, 350, 60, 16);
+        jPanel2.add(textField3);
+        textField3.setBounds(270, 250, 50, 20);
+
+        textField4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textField4ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(textField4);
+        textField4.setBounds(390, 300, 60, 20);
+
+        jLabel9.setText("Número de ciclos para generar solicitud/es:");
+        jPanel2.add(jLabel9);
+        jLabel9.setBounds(30, 250, 250, 16);
+        jPanel2.add(textField5);
+        textField5.setBounds(90, 350, 50, 20);
+
+        button1.setLabel("Crear");
+        jPanel2.add(button1);
+        button1.setBounds(520, 390, 100, 40);
+
+        jTabbedPane2.addTab("Crear", jPanel2);
+
+        jPanel3.setLayout(null);
+
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel7.setText("Modificar parametros iniciales:");
         jLabel7.setPreferredSize(new java.awt.Dimension(120, 14));
-        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 250, 250, 30));
+        jPanel3.add(jLabel7);
+        jLabel7.setBounds(29, 9, 251, 20);
 
         txtCiclosCompletarExcepcion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCiclosCompletarExcepcionActionPerformed(evt);
             }
         });
-        getContentPane().add(txtCiclosCompletarExcepcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 330, 70, -1));
+        jPanel3.add(txtCiclosCompletarExcepcion);
+        txtCiclosCompletarExcepcion.setBounds(29, 127, 64, 22);
 
         jLabel21.setText("Ciclos para completar excepción");
-        getContentPane().add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 350, 230, -1));
+        jPanel3.add(jLabel21);
+        jLabel21.setBounds(98, 130, 300, 16);
 
         btnConfigurar1.setText("Actualizar");
         btnConfigurar1.addActionListener(new java.awt.event.ActionListener() {
@@ -149,57 +310,72 @@ public class Menu extends javax.swing.JFrame {
                 btnConfigurar1ActionPerformed(evt);
             }
         });
-        getContentPane().add(btnConfigurar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 380, -1, -1));
+        jPanel3.add(btnConfigurar1);
+        btnConfigurar1.setBounds(450, 150, 120, 30);
 
         txtDuracion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtDuracionActionPerformed(evt);
             }
         });
-        getContentPane().add(txtDuracion, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 290, 70, -1));
+        jPanel3.add(txtDuracion);
+        txtDuracion.setBounds(29, 207, 64, 22);
 
         jLabel22.setText("Duracion del ciclo (ms)");
-        getContentPane().add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 310, 180, -1));
+        jPanel3.add(jLabel22);
+        jLabel22.setBounds(98, 210, 300, 16);
 
         txtProcesadores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtProcesadoresActionPerformed(evt);
             }
         });
-        getContentPane().add(txtProcesadores, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 290, 70, -1));
+        jPanel3.add(txtProcesadores);
+        txtProcesadores.setBounds(29, 167, 64, 22);
 
         jLabel23.setText("Numero de procesadores");
-        getContentPane().add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 310, 180, -1));
+        jPanel3.add(jLabel23);
+        jLabel23.setBounds(98, 170, 240, 16);
 
         txtCantInstrucciones.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCantInstruccionesActionPerformed(evt);
             }
         });
-        getContentPane().add(txtCantInstrucciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 290, 70, -1));
+        jPanel3.add(txtCantInstrucciones);
+        txtCantInstrucciones.setBounds(29, 47, 64, 22);
 
         jLabel24.setText("Cantidad Instrucciones");
-        getContentPane().add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 310, 180, -1));
+        jPanel3.add(jLabel24);
+        jLabel24.setBounds(100, 50, 160, 16);
 
         txtTipoProceso.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTipoProcesoActionPerformed(evt);
             }
         });
-        getContentPane().add(txtTipoProceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 290, 70, -1));
+        jPanel3.add(txtTipoProceso);
+        txtTipoProceso.setBounds(29, 87, 64, 22);
 
         jLabel25.setText("Tipo de proceso (1=CPU Bound, 0=I/O Bound)");
-        getContentPane().add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 310, 230, -1));
+        jPanel3.add(jLabel25);
+        jLabel25.setBounds(99, 90, 320, 16);
 
         txtCiclosExcepcion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCiclosExcepcionActionPerformed(evt);
             }
         });
-        getContentPane().add(txtCiclosExcepcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 330, 70, -1));
+        jPanel3.add(txtCiclosExcepcion);
+        txtCiclosExcepcion.setBounds(29, 247, 64, 22);
 
         jLabel26.setText("Ciclos para excepción");
-        getContentPane().add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 350, 230, -1));
+        jPanel3.add(jLabel26);
+        jLabel26.setBounds(98, 250, 280, 16);
+
+        jTabbedPane2.addTab("Configuración", jPanel3);
+
+        getContentPane().add(jTabbedPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 700, 500));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -237,6 +413,26 @@ public class Menu extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCiclosExcepcionActionPerformed
 
+    private void textField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textField1ActionPerformed
+
+    private void textField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textField2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void textField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textField4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textField4ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -269,10 +465,10 @@ public class Menu extends javax.swing.JFrame {
             public void run() {
                 Cola<Proceso> procesosListos = new Cola<>();
 
-                procesosListos.enqueue(new Proceso(1, "P1", 10, true, 0, 0));
-                procesosListos.enqueue(new Proceso(2, "P2", 15, false, 3, 2));
-                procesosListos.enqueue(new Proceso(3, "P3", 8, true, 0, 0));
-                procesosListos.enqueue(new Proceso(4, "P4", 12, false, 4, 3));
+                procesosListos.enqueue(new Proceso(1, "P1", 10, true, 0, 0, 3, 4));
+                procesosListos.enqueue(new Proceso(2, "P2", 15, false, 3, 2, 6, 6));
+                procesosListos.enqueue(new Proceso(3, "P3", 8, true, 0, 0, 5, 5));
+                procesosListos.enqueue(new Proceso(4, "P4", 12, false, 4, 3, 2,7));
 
                 SistemaOperativo so = new SistemaOperativo(2, procesosListos);
                 so.iniciar();
@@ -284,13 +480,43 @@ public class Menu extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConfigurar;
     private javax.swing.JButton btnConfigurar1;
+    private java.awt.Button button1;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JTextPane jTextPane2;
+    private javax.swing.JTextPane jTextPane3;
+    private java.awt.TextField textField1;
+    private java.awt.TextField textField2;
+    private java.awt.TextField textField3;
+    private java.awt.TextField textField4;
+    private java.awt.TextField textField5;
     private javax.swing.JTextField txtCantInstrucciones;
     private javax.swing.JTextField txtCiclosCompletarExcepcion;
     private javax.swing.JTextField txtCiclosExcepcion;

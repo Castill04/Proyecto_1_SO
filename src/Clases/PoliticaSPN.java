@@ -4,13 +4,10 @@
  */
 package Clases;
 
-
 /**
  *
  * @author casti
  */
-public class Metricas {
-    
-    
+public class PoliticaSPN {
     
 }
