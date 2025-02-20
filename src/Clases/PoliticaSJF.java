@@ -8,9 +8,9 @@ package Clases;
  *
  * @author casti
  */
-public class PlanificadorSJF extends Scheduler{
+public class PoliticaSJF extends Scheduler{
     
-    public PlanificadorSJF(Cola<Proceso> readyQueue) {
+    public PoliticaSJF(Cola<Proceso> readyQueue) {
         super(readyQueue);
     }
 

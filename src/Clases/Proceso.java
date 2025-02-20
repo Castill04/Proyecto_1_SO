@@ -19,8 +19,10 @@ public class Proceso extends Thread {
     private int ioCompletionCycle;
     private CPU cpuAsignada;
     private String estado;
+    private long tiempollegada;
+    private long tiempoespera;
 
-    public Proceso(long id, String nombre, int instrucciones, boolean isCpuBound, int ioExceptionCycle, int ioCompletionCycle) {
+    public Proceso(long id, String nombre, int instrucciones, boolean isCpuBound, int ioExceptionCycle, int ioCompletionCycle, long tiempollegada, long tiempoespera) {
         this.id = id;
         this.nombre = nombre;
         this.instruccionesRestantes = instrucciones;
@@ -28,6 +30,8 @@ public class Proceso extends Thread {
         this.ioExceptionCycle = ioExceptionCycle;
         this.ioCompletionCycle = ioCompletionCycle;
         this.estado = "Ready";
+        this.tiempoespera = 0;
+        this.tiempollegada = tiempollegada;
     }
 
     public void asignarCPU(CPU cpu) {
@@ -95,4 +99,21 @@ public class Proceso extends Thread {
     public int getInstruccionesRestantes() {
         return instruccionesRestantes;
     }
+
+    public long getTiempollegada() {
+        return tiempollegada;
+    }
+
+    public void setTiempollegada(long tiempollegada) {
+        this.tiempollegada = tiempollegada;
+    }
+
+    public long getTiempoespera() {
+        return tiempoespera;
+    }
+
+    public void setTiempoespera(long tiempoespera) {
+        this.tiempoespera = tiempoespera;
+    }
+    
 }

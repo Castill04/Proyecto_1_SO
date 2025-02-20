@@ -8,12 +8,12 @@ package Clases;
  *
  * @author casti
  */
-public class PlanificadorRR extends Scheduler{
+public class PoliticaRR extends Scheduler{
     
     private int timeQuantum;
     private Cola<Proceso> rrQueue;
 
-    public PlanificadorRR(Cola<Proceso> readyQueue, int timeQuantum) {
+    public PoliticaRR(Cola<Proceso> readyQueue, int timeQuantum) {
         super(readyQueue);
         this.timeQuantum = timeQuantum;
         this.rrQueue = new Cola<>();

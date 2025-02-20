@@ -465,10 +465,10 @@ public class Menu extends javax.swing.JFrame {
             public void run() {
                 Cola<Proceso> procesosListos = new Cola<>();
 
-                procesosListos.enqueue(new Proceso(1, "P1", 10, true, 0, 0));
-                procesosListos.enqueue(new Proceso(2, "P2", 15, false, 3, 2));
-                procesosListos.enqueue(new Proceso(3, "P3", 8, true, 0, 0));
-                procesosListos.enqueue(new Proceso(4, "P4", 12, false, 4, 3));
+                procesosListos.enqueue(new Proceso(1, "P1", 10, true, 0, 0, 3, 4));
+                procesosListos.enqueue(new Proceso(2, "P2", 15, false, 3, 2, 6, 6));
+                procesosListos.enqueue(new Proceso(3, "P3", 8, true, 0, 0, 5, 5));
+                procesosListos.enqueue(new Proceso(4, "P4", 12, false, 4, 3, 2,7));
 
                 SistemaOperativo so = new SistemaOperativo(2, procesosListos);
                 so.iniciar();
