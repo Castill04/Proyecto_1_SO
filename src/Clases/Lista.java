@@ -44,4 +44,17 @@ public class Lista<T> {
     public int size() {
         return size;
     }
+    
+    public void set(int index, T data) {
+        Nodo<T> current = head;
+        int count = 0;
+        while (current != null) {
+            if (count == index) {
+                current.setData(data);
+                return;
+            }
+            count++;
+            current = current.getNext();
+        }
+    }
 }

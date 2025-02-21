@@ -55,4 +55,36 @@ public class Cola<T> {
     public int getSize() {
         return size;
     }
+
+    public Nodo<T> getFront() {
+        return front;
+    }
+
+    public void setFront(Nodo<T> front) {
+        this.front = front;
+    }
+
+    public Nodo<T> getRear() {
+        return rear;
+    }
+
+    public void setRear(Nodo<T> rear) {
+        this.rear = rear;
+    }
+    
+    public void decrementSize() {
+        if (size > 0) {
+            size--;
+        }
+    }
+    
+    public Lista<T> toLista() {
+        Lista<T> lista = new Lista<>();
+        Nodo<T> current = front;
+        while (current != null) {
+            lista.add(current.getData());
+            current = current.getNext();
+        }
+        return lista;
+    }
 }

@@ -9,9 +9,10 @@ package Clases;
  *
  * @author Ignacio
  */
+import Clases.SistemaOperativo;
 
 public class Proceso extends Thread {
-    private long id;
+    private int id;
     private String nombre;
     private int instruccionesRestantes;
     private boolean isCpuBound;
@@ -19,8 +20,13 @@ public class Proceso extends Thread {
     private int ioCompletionCycle;
     private CPU cpuAsignada;
     private String estado;
+    private int tiempollegada;
+    private int tiempoespera;
+    private SistemaOperativo sistemaOperativo;
+    private volatile boolean running = true;
+    
 
-    public Proceso(long id, String nombre, int instrucciones, boolean isCpuBound, int ioExceptionCycle, int ioCompletionCycle) {
+    public Proceso(int id, String nombre, int instrucciones, boolean isCpuBound, int ioExceptionCycle, int ioCompletionCycle, int tiempollegada, int tiempoespera, SistemaOperativo sistemaOperativo) {
         this.id = id;
         this.nombre = nombre;
         this.instruccionesRestantes = instrucciones;
@@ -28,16 +34,48 @@ public class Proceso extends Thread {
         this.ioExceptionCycle = ioExceptionCycle;
         this.ioCompletionCycle = ioCompletionCycle;
         this.estado = "Ready";
+        this.tiempoespera = 0;
+        this.tiempollegada = tiempollegada;
+        this.sistemaOperativo = sistemaOperativo;
+    }
+    
+    public void detener() {
+        running = false;
     }
 
     public void asignarCPU(CPU cpu) {
         this.cpuAsignada = cpu;
         cpu.ejecutarProceso(this);
     }
+    
+    public void ejecutarConQuantum(int quantum) {
+        try {
+            cpuAsignada.adquirirCPU();
+            estado = "Running";
+
+            for (int i = 0; i < quantum && instruccionesRestantes > 0; i++) {
+                System.out.println("🔹 Proceso " + nombre + " ejecutando en CPU " + cpuAsignada.getId() + " - Instrucciones restantes: " + instruccionesRestantes);
+                Thread.sleep(1000);
+                instruccionesRestantes--;
+            }
+
+            if (instruccionesRestantes > 0) {
+                System.out.println("🔁 Quantum terminado, reinsertando proceso " + nombre + " en la cola.");
+                estado = "Ready";
+                cpuAsignada.liberarCPU();
+            } else {
+                estado = "Terminated";
+                System.out.println("✅ Proceso " + nombre + " ha finalizado.");
+                cpuAsignada.liberarCPU();
+            }
+        } catch (InterruptedException e) {
+            System.out.println("⚠️ Proceso " + nombre + " interrumpido.");
+        }
+    }
 
     @Override
     public void run() {
-        if (cpuAsignada == null) {
+        if (cpuAsignada == null || !running) {
             return;
         }
         try {
@@ -53,6 +91,7 @@ public class Proceso extends Thread {
                     estado = "Blocked";
                     System.out.println("⛔ Proceso " + nombre + " en espera por I/O...");
                     cpuAsignada.liberarCPU();
+                    sistemaOperativo.manejarProcesosBloqueados(this);
                     return;
                 }
             }
@@ -87,6 +126,10 @@ public class Proceso extends Thread {
     public long getId() {
         return id;
     }
+    
+    public int getProcesoId() { 
+        return id;
+    }
 
     public String getNombre() {
         return nombre;
@@ -95,4 +138,29 @@ public class Proceso extends Thread {
     public int getInstruccionesRestantes() {
         return instruccionesRestantes;
     }
+
+    public int getTiempollegada() {
+        return tiempollegada;
+    }
+
+    public void setTiempollegada(int tiempollegada) {
+        this.tiempollegada = tiempollegada;
+    }
+
+    public int getTiempoespera() {
+        return tiempoespera;
+    }
+
+    public void setTiempoespera(int tiempoespera) {
+        this.tiempoespera = tiempoespera;
+    }
+    
+    public boolean isCpuBound() {
+        return isCpuBound;
+    }
+
+    public int getIoExceptionCycle() {
+        return ioExceptionCycle;
+    }
+    
 }
