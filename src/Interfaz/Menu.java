@@ -77,10 +77,10 @@ public class Menu extends javax.swing.JFrame {
         tablaBloqueados.setModel(modeloBloqueados);
         
         modeloTerminados = new DefaultTableModel(new String[]{"ID", "Nombre"}, 0);
-        tablaTerminados = new JTable(modeloTerminados);
+        tablaTerminados.setModel(modeloTerminados); 
 
         modeloEnEjecucion = new DefaultTableModel(new String[]{"ID", "Estado", "CPU"}, 0);
-        tablaEjecucion = new JTable(modeloEnEjecucion);
+        tablaEjecucion.setModel(modeloEnEjecucion);
 
         new javax.swing.Timer(sistemaOperativo.getDuraciónCiclo(), e -> actualizarTablas()).start();
         new javax.swing.Timer(sistemaOperativo.getDuraciónCiclo(), e -> actualizarCicloReloj()).start();
@@ -173,10 +173,9 @@ public class Menu extends javax.swing.JFrame {
 
     
     private void configurarComponentes() {
-                String seleccion = (String) SeleccionP.getSelectedItem();
-                sistemaOperativo.cambiarPolitica(seleccion);
-                scheduler = sistemaOperativo.getScheduler();
-                sistemaOperativo.iniciar();
+       String seleccion = (String) SeleccionP.getSelectedItem();
+       sistemaOperativo.cambiarPolitica(seleccion);
+       scheduler = sistemaOperativo.getScheduler();
     }
     
     private void actualizarCicloReloj() {

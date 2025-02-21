@@ -138,7 +138,15 @@ public class SistemaOperativo {
     }
     
     public void cambiarPolitica(String seleccion) {
-        detener();
+        System.out.println("🔄 Cambiando política de planificación a: " + seleccion);
+
+        for (CPU cpu : cpus) {
+            Proceso procesoActual = cpu.getProcesoActual();
+            if (procesoActual != null && !procesoActual.haFinalizado()) {
+                procesosListos.enqueue(procesoActual);
+                cpu.liberarCPU(); 
+            }
+        }
 
         switch (seleccion) {
             case "FCFS":
@@ -160,8 +168,9 @@ public class SistemaOperativo {
                 throw new IllegalArgumentException("Política de planificación no reconocida: " + seleccion);
         }
 
-        System.out.println("🔄 Cambiada política de planificación a: " + seleccion);
+        scheduler.setCPUs(cpus);
         iniciar();
+        scheduler.asignarProceso(); 
     }
     
    public void procesosTerminados(Proceso proceso){
