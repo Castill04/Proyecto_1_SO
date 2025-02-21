@@ -5,6 +5,7 @@ package Interfaz;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import Clases.CPU;
 import Clases.Cola;
 import Clases.Lista;
 import Clases.Configuracion;
@@ -13,14 +14,18 @@ import Clases.Scheduler;
 import Clases.SistemaOperativo;
 import Clases.PoliticaRR;
 import Clases.PoliticaFCFSS;
-import Clases.PoliticaSJF;
+import Clases.PoliticaSRT;
 import Clases.PoliticaHRRN;
 import Clases.PoliticaSPN;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.*;
 /**
  *
@@ -29,13 +34,19 @@ import java.awt.*;
 public class Menu extends javax.swing.JFrame {
     private DefaultTableModel modeloListos;
     private DefaultTableModel modeloBloqueados;
+    private DefaultTableModel modeloTerminados;
+    private DefaultTableModel modeloEnEjecucion;
     public Configuracion configuracion;
+    private Scheduler scheduler;
     private SistemaOperativo sistemaOperativo;
+    private int duracionCiclo;
+
     /**
      * Creates new form Menu
      */
-    public Menu(SistemaOperativo sistemaOperativo) {
+    public Menu(SistemaOperativo sistemaOperativo, Scheduler scheduler) {
         this.sistemaOperativo = sistemaOperativo;
+        this.scheduler = scheduler;
         configuracion = new Configuracion("parametros.txt");
         try {
             configuracion.verificarYCrearArchivo();
@@ -48,15 +59,14 @@ public class Menu extends javax.swing.JFrame {
             // [3] - Tipo de proceso (1=CPU Bound, 0=I/O Bound)
             // [4] - Ciclos para excepción
             // [5] - Ciclos para completar excepción
-
+            duracionCiclo = parametros[0];
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(configuracion);
         initComponents();
         cargarParametrosDesdeTXT();
         configurarTablas();
-        //configurarSpinners();
+        configurarSpinners();
     }
     
     private void configurarTablas() {
@@ -65,9 +75,15 @@ public class Menu extends javax.swing.JFrame {
 
         modeloBloqueados = new DefaultTableModel(new String[]{"ID", "Nombre", "I/O Completion"}, 0);
         tablaBloqueados.setModel(modeloBloqueados);
+        
+        modeloTerminados = new DefaultTableModel(new String[]{"ID", "Nombre"}, 0);
+        tablaTerminados = new JTable(modeloTerminados);
 
-        new javax.swing.Timer(1000, e -> actualizarTablas()).start();
-        new javax.swing.Timer(1000, e -> actualizarCicloReloj()).start();
+        modeloEnEjecucion = new DefaultTableModel(new String[]{"ID", "Estado", "CPU"}, 0);
+        tablaEjecucion = new JTable(modeloEnEjecucion);
+
+        new javax.swing.Timer(sistemaOperativo.getDuraciónCiclo(), e -> actualizarTablas()).start();
+        new javax.swing.Timer(sistemaOperativo.getDuraciónCiclo(), e -> actualizarCicloReloj()).start();
     }
     
    private void cargarConfiguracion() {
@@ -122,35 +138,45 @@ public class Menu extends javax.swing.JFrame {
     }
     
     private void actualizarTablas() {
+        scheduler.setProcesosTerminados(sistemaOperativo.getProcesosTerminados());
+        
         modeloListos.setRowCount(0); 
-        Lista<Proceso> listos = sistemaOperativo.getProcesosListosL();
+        Lista<Proceso> listos = scheduler.getProcesosListosL();
         for (int i = 0; i < listos.size(); i++) {
             Proceso p = listos.get(i);
             modeloListos.addRow(new Object[]{p.getId(), p.getNombre(), p.getInstruccionesRestantes(), (p.isCpuBound() ? "CPU-Bound" : "I/O-Bound")});
         }
 
         modeloBloqueados.setRowCount(0);
-        Lista<Proceso> bloqueados = sistemaOperativo.getProcesosBloqueadosL();
+        Lista<Proceso> bloqueados = scheduler.getProcesosBloqueadosL();
         for (int i = 0; i < bloqueados.size(); i++) {
             Proceso p = bloqueados.get(i);
             modeloBloqueados.addRow(new Object[]{p.getId(), p.getNombre(), p.getIoCompletionCycle()});
         }
+        
+        modeloTerminados.setRowCount(0);
+        Lista<Proceso> terminados = scheduler.getProcesosTerminadosL();
+        for (int i = 0; i < terminados.size(); i++) {
+            Proceso p = terminados.get(i);
+            modeloTerminados.addRow(new Object[]{p.getId(), p.getNombre()});
+        }
+
+        modeloEnEjecucion.setRowCount(0);
+        CPU[] cpus = scheduler.getCPUs();
+        for (CPU cpu : cpus) {
+            Proceso p = cpu.getProcesoActual();
+            if (p != null) {
+                modeloEnEjecucion.addRow(new Object[]{p.getId(), "Ejecutando", "CPU " + cpu.getId()});
+            }
+        }
     }
 
     
-    private void cambiarPolitica(String seleccion) {
-        if (seleccion.equals("FCFS")) {
-            sistemaOperativo.setScheduler(new PoliticaFCFSS(2, sistemaOperativo.getProcesosListos(), sistemaOperativo.getProcesosBloqueados()));
-        } else if (seleccion.equals("Round Robin")) {
-            sistemaOperativo.setScheduler(new PoliticaRR(2, sistemaOperativo.getProcesosListos(),sistemaOperativo.getProcesosBloqueados()));
-        } else if (seleccion.equals("SJF")) {
-            sistemaOperativo.setScheduler(new PoliticaSJF(2, sistemaOperativo.getProcesosListos(), sistemaOperativo.getProcesosBloqueados()));
-        } else if (seleccion.equals("HRRN")) {
-            sistemaOperativo.setScheduler(new PoliticaHRRN(2, sistemaOperativo.getProcesosListos(), sistemaOperativo.getProcesosBloqueados()));
-        } else {
-            sistemaOperativo.setScheduler(new PoliticaSPN(2, sistemaOperativo.getProcesosListos(), sistemaOperativo.getProcesosBloqueados()));
-        }
-        System.out.println("🔄 Cambiada política de planificación a: " + seleccion);
+    private void configurarComponentes() {
+                String seleccion = (String) SeleccionP.getSelectedItem();
+                sistemaOperativo.cambiarPolitica(seleccion);
+                scheduler = sistemaOperativo.getScheduler();
+                sistemaOperativo.iniciar();
     }
     
     private void actualizarCicloReloj() {
@@ -174,15 +200,29 @@ public class Menu extends javax.swing.JFrame {
     }
     
     private void configurarSpinners() {
-        SpinnerNumberModel modeloDuracion = new SpinnerNumberModel((int) spinnerDuracionCiclo.getValue(), 0, Integer.MAX_VALUE, 100);
+        SpinnerNumberModel modeloDuracion = new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1);
         spinnerDuracionCiclo.setModel(modeloDuracion);
 
-        SpinnerNumberModel modeloProcesadores = new SpinnerNumberModel((int) spinnerNumProcesadores.getValue(), 2, 3, 1);
+        SpinnerNumberModel modeloProcesadores = new SpinnerNumberModel(2, 2, 3, 1);
         spinnerNumProcesadores.setModel(modeloProcesadores);
 
-        spinnerNumProcesadores.addChangeListener(e -> actualizarCPUs((int) spinnerNumProcesadores.getValue()));
+        spinnerNumProcesadores.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                int numProcesadores = (int) spinnerNumProcesadores.getValue();
+                sistemaOperativo.actualizarCPUs(numProcesadores);
+            }
+        });
 
-        spinnerDuracionCiclo.addChangeListener(e -> sistemaOperativo.setDuraciónCiclo((int) spinnerDuracionCiclo.getValue()));
+        spinnerDuracionCiclo.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                int duracionCiclo = (int) spinnerDuracionCiclo.getValue();
+                sistemaOperativo.setDuraciónCiclo(duracionCiclo);
+            }
+        });
+
+        cargarParametrosDesdeTXT();
     }
     
     private void actualizarCPUs(int numProcesadores) {
@@ -203,8 +243,6 @@ public class Menu extends javax.swing.JFrame {
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         lblCicloReloj = new javax.swing.JLabel();
@@ -220,6 +258,12 @@ public class Menu extends javax.swing.JFrame {
         spinnerDuracionCiclo = new javax.swing.JSpinner();
         jLabel13 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
+        botonCambiarPolitica = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaTerminados = new javax.swing.JTable();
+        jLabel18 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablaEjecucion = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -270,11 +314,6 @@ public class Menu extends javax.swing.JFrame {
         jPanel1.add(jLabel10);
         jLabel10.setBounds(400, 10, 170, 30);
 
-        jScrollPane1.setViewportView(jTextPane1);
-
-        jPanel1.add(jScrollPane1);
-        jScrollPane1.setBounds(450, 110, 220, 140);
-
         jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel11.setText("Cola de listos");
         jPanel1.add(jLabel11);
@@ -289,7 +328,7 @@ public class Menu extends javax.swing.JFrame {
         jPanel1.add(lblCicloReloj);
         lblCicloReloj.setBounds(580, 10, 70, 30);
 
-        SeleccionP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FCFS", "Round Robin", "HRRN", "SJF", "SPN" }));
+        SeleccionP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FCFS", "Round Robin", "HRRN", "SRT", "SPN" }));
         SeleccionP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SeleccionPActionPerformed(evt);
@@ -341,9 +380,9 @@ public class Menu extends javax.swing.JFrame {
         jLabel15.setBounds(10, 10, 160, 30);
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel16.setText("Procesos activos");
+        jLabel16.setText("Procesos Terminados");
         jPanel1.add(jLabel16);
-        jLabel16.setBounds(460, 70, 160, 30);
+        jLabel16.setBounds(480, 270, 180, 30);
         jPanel1.add(spinnerNumProcesadores);
         spinnerNumProcesadores.setBounds(220, 430, 130, 30);
         jPanel1.add(spinnerDuracionCiclo);
@@ -358,6 +397,52 @@ public class Menu extends javax.swing.JFrame {
         jLabel17.setText("Duración Ciclo Instrucción:");
         jPanel1.add(jLabel17);
         jLabel17.setBounds(10, 380, 250, 60);
+
+        botonCambiarPolitica.setText("Cambiar Política");
+        botonCambiarPolitica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonCambiarPoliticaActionPerformed(evt);
+            }
+        });
+        jPanel1.add(botonCambiarPolitica);
+        botonCambiarPolitica.setBounds(320, 360, 120, 30);
+
+        tablaTerminados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tablaTerminados);
+
+        jPanel1.add(jScrollPane1);
+        jScrollPane1.setBounds(440, 300, 250, 160);
+
+        jLabel18.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel18.setText("Procesos activos");
+        jPanel1.add(jLabel18);
+        jLabel18.setBounds(490, 70, 170, 30);
+
+        tablaEjecucion.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(tablaEjecucion);
+
+        jPanel1.add(jScrollPane2);
+        jScrollPane2.setBounds(440, 100, 250, 160);
 
         jTabbedPane2.addTab("Dashboard", jPanel1);
 
@@ -462,7 +547,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         jPanel3.add(txtCiclosCompletarExcepcion);
-        txtCiclosCompletarExcepcion.setBounds(29, 127, 7, 20);
+        txtCiclosCompletarExcepcion.setBounds(29, 127, 60, 20);
 
         jLabel21.setText("Ciclos para completar excepción");
         jPanel3.add(jLabel21);
@@ -483,7 +568,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         jPanel3.add(txtDuracion);
-        txtDuracion.setBounds(29, 207, 7, 20);
+        txtDuracion.setBounds(29, 207, 60, 20);
 
         jLabel22.setText("Duracion del ciclo (ms)");
         jPanel3.add(jLabel22);
@@ -495,7 +580,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         jPanel3.add(txtProcesadores);
-        txtProcesadores.setBounds(29, 167, 7, 20);
+        txtProcesadores.setBounds(29, 167, 60, 20);
 
         jLabel23.setText("Numero de procesadores");
         jPanel3.add(jLabel23);
@@ -507,7 +592,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         jPanel3.add(txtCantInstrucciones);
-        txtCantInstrucciones.setBounds(29, 47, 7, 20);
+        txtCantInstrucciones.setBounds(29, 47, 60, 20);
 
         jLabel24.setText("Cantidad Instrucciones");
         jPanel3.add(jLabel24);
@@ -519,7 +604,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         jPanel3.add(txtTipoProceso);
-        txtTipoProceso.setBounds(29, 87, 7, 20);
+        txtTipoProceso.setBounds(29, 87, 60, 20);
 
         jLabel25.setText("Tipo de proceso (1=CPU Bound, 0=I/O Bound)");
         jPanel3.add(jLabel25);
@@ -531,7 +616,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         jPanel3.add(txtCiclosExcepcion);
-        txtCiclosExcepcion.setBounds(29, 247, 7, 20);
+        txtCiclosExcepcion.setBounds(29, 247, 60, 20);
 
         jLabel26.setText("Ciclos para excepción");
         jPanel3.add(jLabel26);
@@ -598,8 +683,12 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_textField4ActionPerformed
 
     private void SeleccionPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SeleccionPActionPerformed
-        cambiarPolitica((String) SeleccionP.getSelectedItem());
+
     }//GEN-LAST:event_SeleccionPActionPerformed
+
+    private void botonCambiarPoliticaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCambiarPoliticaActionPerformed
+             configurarComponentes();
+    }//GEN-LAST:event_botonCambiarPoliticaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -643,18 +732,27 @@ public class Menu extends javax.swing.JFrame {
 
             Cola<Proceso> procesosListos = new Cola<>();
             Cola<Proceso> procesosBloqueados = new Cola<>();
+            Cola<Proceso> procesosTerminados = new Cola<>();
+            Cola<Proceso> procesosEjecucion = new Cola<>();
 
-            Scheduler schedulerInicial = new PoliticaFCFSS(numProcesadores, procesosListos, procesosBloqueados);
-            SistemaOperativo sistemaOperativo = new SistemaOperativo(schedulerInicial, procesosListos, procesosBloqueados);
+            Scheduler schedulerInicial = new PoliticaFCFSS(procesosListos, procesosBloqueados, procesosTerminados);
+            SistemaOperativo sistemaOperativo = new SistemaOperativo(schedulerInicial, procesosListos, procesosBloqueados, procesosTerminados, procesosEjecucion, numProcesadores);
             sistemaOperativo.setDuraciónCiclo(duracionCiclo);
 
-            procesosListos.enqueue(new Proceso(101, "ProcesoA", numInstrucciones, tipoProceso == 1, ciclosExcepcion, ciclosCompletarExcepcion, 1000, 5, sistemaOperativo));
-            procesosListos.enqueue(new Proceso(102, "ProcesoB", numInstrucciones, tipoProceso == 1, ciclosExcepcion, ciclosCompletarExcepcion, 1000, 5, sistemaOperativo));
-            procesosListos.enqueue(new Proceso(103, "ProcesoC", numInstrucciones, tipoProceso == 1, ciclosExcepcion, ciclosCompletarExcepcion, 1000, 5, sistemaOperativo));
-            procesosListos.enqueue(new Proceso(104, "ProcesoD", numInstrucciones, tipoProceso == 1, ciclosExcepcion, ciclosCompletarExcepcion, 1000, 5, sistemaOperativo));
+            for (int i = 1; i <= 15; i++) {
+                procesosListos.enqueue(new Proceso(100 + i, "Proceso" + i, numInstrucciones, tipoProceso == 1, ciclosExcepcion, ciclosCompletarExcepcion, 1000, 5, sistemaOperativo));
+            }
+
+            for (int i = 16; i <= 30; i++) {
+                int randomInstrucciones = (int) (Math.random() * 50) + 1;
+                int randomTipoProceso = (int) (Math.random() * 2);
+                int randomCiclosExcepcion = (int) (Math.random() * 10) + 1;
+                int randomCiclosCompletarExcepcion = (int) (Math.random() * 10) + 1;
+                procesosListos.enqueue(new Proceso(100 + i, "Proceso" + i, randomInstrucciones, randomTipoProceso == 1, randomCiclosExcepcion, randomCiclosCompletarExcepcion, 1000, 5, sistemaOperativo));
+            }
 
             sistemaOperativo.iniciar();
-            new Menu(sistemaOperativo).setVisible(true);
+            new Menu(sistemaOperativo, schedulerInicial).setVisible(true);
             
         } catch (IOException e) {
             e.printStackTrace();
@@ -664,6 +762,7 @@ public class Menu extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> SeleccionP;
+    private javax.swing.JButton botonCambiarPolitica;
     private javax.swing.JButton btnConfigurar;
     private javax.swing.JButton btnConfigurar1;
     private java.awt.Button button1;
@@ -678,6 +777,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
@@ -696,15 +796,17 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLabel lblCicloReloj;
     private javax.swing.JSpinner spinnerDuracionCiclo;
     private javax.swing.JSpinner spinnerNumProcesadores;
     private javax.swing.JTable tablaBloqueados;
+    private javax.swing.JTable tablaEjecucion;
     private javax.swing.JTable tablaListos;
+    private javax.swing.JTable tablaTerminados;
     private java.awt.TextField textField1;
     private java.awt.TextField textField2;
     private java.awt.TextField textField3;

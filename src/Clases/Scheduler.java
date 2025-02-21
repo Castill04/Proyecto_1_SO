@@ -14,20 +14,21 @@ public abstract class Scheduler {
     protected Cola<Proceso> procesosListos;
     protected Cola<Proceso> procesosBloqueados;
     protected Cola<Proceso> procesosTerminados;
-    private int quantum = 0;
 
-    public Scheduler(int numCPUs, Cola<Proceso> procesosL, Cola<Proceso> procesosB) {
-        this.cpus = new CPU[numCPUs];
+    public Scheduler(Cola<Proceso> procesosL, Cola<Proceso> procesosB, Cola<Proceso> procesosT) {
         this.procesosListos = procesosL;
         this.procesosBloqueados = procesosB;
-        this.procesosTerminados = new Cola<>();
+        this.procesosTerminados = procesosT;
+    }
 
-        for (int i = 0; i < numCPUs; i++) {
-            cpus[i] = new CPU(i);
-        }
+    public void setCPUs(CPU[] cpus) {
+        this.cpus = cpus;
     }
 
     protected CPU obtenerCPUDisponible() {
+        if (cpus == null) {
+            throw new NullPointerException("La variable cpus no ha sido inicializada.");
+        }
         for (CPU cpu : cpus) {
             if (cpu.estaLibre()) {
                 return cpu;
@@ -38,20 +39,27 @@ public abstract class Scheduler {
 
     public abstract void asignarProceso();
     
-    public void actualizarCPUs(int nuevoNumCPUs) {
-        if (nuevoNumCPUs > cpus.length) {
-            CPU[] nuevasCPUs = new CPU[nuevoNumCPUs];
-            System.arraycopy(cpus, 0, nuevasCPUs, 0, cpus.length);
-            for (int i = cpus.length; i < nuevoNumCPUs; i++) {
-                nuevasCPUs[i] = new CPU(i);
-            }
-            cpus = nuevasCPUs;
-        } else if (nuevoNumCPUs < cpus.length) {
-            CPU[] nuevasCPUs = new CPU[nuevoNumCPUs];
-            System.arraycopy(cpus, 0, nuevasCPUs, 0, nuevoNumCPUs);
-            cpus = nuevasCPUs;
-        }
-
-        System.out.println("✅ CPUs ahora son: " + cpus.length);
+    public Lista<Proceso> getProcesosListosL() {
+        return procesosListos.toLista();
     }
+
+    public Lista<Proceso> getProcesosBloqueadosL() {
+        return procesosBloqueados.toLista();
+    }    
+    
+    public Lista<Proceso> getProcesosTerminadosL() {
+        return procesosTerminados.toLista();
+    }
+    
+    public CPU[] getCPUs() {
+        return cpus;
+    }
+
+    public void setProcesosTerminados(Cola<Proceso> procesosTerminados) {
+        this.procesosTerminados = procesosTerminados;
+    }
+    
 }
+
+
+

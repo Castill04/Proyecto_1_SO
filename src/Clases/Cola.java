@@ -87,4 +87,38 @@ public class Cola<T> {
         }
         return lista;
     }
+    
+    public void clear() {
+        front = null;
+        rear = null;
+        size = 0;
+    }
+
+    public void remove(T elemento) {
+        if (front == null) {
+            return;
+        }
+
+        if (front.getData().equals(elemento)) {
+            front = front.getNext();
+            if (front == null) {
+                rear = null;
+            }
+            size--;
+            return;
+        }
+
+        Nodo<T> current = front;
+        while (current.getNext() != null && !current.getNext().getData().equals(elemento)) {
+            current = current.getNext();
+        }
+
+        if (current.getNext() != null) {
+            current.setNext(current.getNext().getNext());
+            if (current.getNext() == null) {
+                rear = current;
+            }
+            size--;
+        }
+    }
 }

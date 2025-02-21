@@ -8,9 +8,9 @@ package Clases;
  *
  * @author casti
  */
-public class PoliticaSPN extends Scheduler{
+public class PoliticaSRT extends Scheduler{
     
-    public PoliticaSPN(Cola<Proceso> procesosL, Cola<Proceso> procesosB, Cola<Proceso> procesosT) {
+    public PoliticaSRT(Cola<Proceso> procesosL, Cola<Proceso> procesosB, Cola<Proceso> procesosT) {
         super(procesosL, procesosB, procesosT);
     }
 
@@ -20,23 +20,31 @@ public class PoliticaSPN extends Scheduler{
             return;
         }
 
-        reorganizarColaPorSPN();
+        reorganizarColaPorSRT();
 
         for (CPU cpu : cpus) {
             if (procesosListos.isEmpty()) {
-                break;
+                break; 
             }
 
-            if (cpu.estaLibre()) { 
-                Proceso procesoCorto = procesosListos.dequeue();
-                cpu.ejecutarProceso(procesoCorto);
+            Proceso procesoConMenorTiempoRestante = procesosListos.peek();
+            Proceso procesoActual = cpu.getProcesoActual(); 
+
+            if (procesoActual == null) {
+                procesosListos.dequeue();
+                cpu.ejecutarProceso(procesoConMenorTiempoRestante);
+            } else if (procesoConMenorTiempoRestante.getInstruccionesRestantes() < procesoActual.getInstruccionesRestantes()) {
+                procesoActual.detener();
+                procesosListos.enqueue(procesoActual);
+                procesosListos.dequeue();
+                cpu.ejecutarProceso(procesoConMenorTiempoRestante);
             }
         }
     }
 
-    private void reorganizarColaPorSPN() {
+    private void reorganizarColaPorSRT() {
         Lista<Proceso> listaProcesos = procesosListos.toLista();
-
+        
         for (int i = 0; i < listaProcesos.size() - 1; i++) {
             for (int j = 0; j < listaProcesos.size() - i - 1; j++) {
                 if (listaProcesos.get(j).getInstruccionesRestantes() > listaProcesos.get(j + 1).getInstruccionesRestantes()) {
@@ -53,3 +61,4 @@ public class PoliticaSPN extends Scheduler{
         }
     }
 }
+    

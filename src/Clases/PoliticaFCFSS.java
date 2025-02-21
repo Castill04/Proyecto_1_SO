@@ -11,8 +11,8 @@ package Clases;
  */
 
 public class PoliticaFCFSS extends Scheduler{
-    public PoliticaFCFSS(int numCPUs, Cola<Proceso> procesosL, Cola<Proceso> procesosB) {
-        super(numCPUs, procesosL, procesosB);
+    public PoliticaFCFSS(Cola<Proceso> procesosL, Cola<Proceso> procesosB, Cola<Proceso> procesosT) {
+        super(procesosL, procesosB, procesosT);
     }
 
     @Override

@@ -9,7 +9,6 @@ package Clases;
  *
  * @author Ignacio
  */
-import Clases.SistemaOperativo;
 
 public class Proceso extends Thread {
     private int id;
@@ -24,7 +23,6 @@ public class Proceso extends Thread {
     private int tiempoespera;
     private SistemaOperativo sistemaOperativo;
     private volatile boolean running = true;
-    
 
     public Proceso(int id, String nombre, int instrucciones, boolean isCpuBound, int ioExceptionCycle, int ioCompletionCycle, int tiempollegada, int tiempoespera, SistemaOperativo sistemaOperativo) {
         this.id = id;
@@ -38,7 +36,7 @@ public class Proceso extends Thread {
         this.tiempollegada = tiempollegada;
         this.sistemaOperativo = sistemaOperativo;
     }
-    
+
     public void detener() {
         running = false;
     }
@@ -47,7 +45,7 @@ public class Proceso extends Thread {
         this.cpuAsignada = cpu;
         cpu.ejecutarProceso(this);
     }
-    
+
     public void ejecutarConQuantum(int quantum) {
         try {
             cpuAsignada.adquirirCPU();
@@ -55,7 +53,7 @@ public class Proceso extends Thread {
 
             for (int i = 0; i < quantum && instruccionesRestantes > 0; i++) {
                 System.out.println("🔹 Proceso " + nombre + " ejecutando en CPU " + cpuAsignada.getId() + " - Instrucciones restantes: " + instruccionesRestantes);
-                Thread.sleep(1000);
+                Thread.sleep(sistemaOperativo.getDuraciónCiclo());
                 instruccionesRestantes--;
             }
 
@@ -84,7 +82,7 @@ public class Proceso extends Thread {
 
             while (instruccionesRestantes > 0) {
                 System.out.println("🔹 Proceso " + nombre + " ejecutando en CPU " + cpuAsignada.getId() + " - Instrucciones restantes: " + instruccionesRestantes);
-                Thread.sleep(1000);
+                Thread.sleep(sistemaOperativo.getDuraciónCiclo());
                 instruccionesRestantes--;
 
                 if (!isCpuBound && ioExceptionCycle > 0 && instruccionesRestantes % ioExceptionCycle == 0) {
@@ -97,6 +95,7 @@ public class Proceso extends Thread {
             }
 
             estado = "Terminated";
+            sistemaOperativo.procesosTerminados(this);
             System.out.println("✅ Proceso " + nombre + " ha finalizado.");
             cpuAsignada.liberarCPU();
 
@@ -126,8 +125,8 @@ public class Proceso extends Thread {
     public long getId() {
         return id;
     }
-    
-    public int getProcesoId() { 
+
+    public int getProcesoId() {
         return id;
     }
 
@@ -154,7 +153,7 @@ public class Proceso extends Thread {
     public void setTiempoespera(int tiempoespera) {
         this.tiempoespera = tiempoespera;
     }
-    
+
     public boolean isCpuBound() {
         return isCpuBound;
     }
@@ -162,5 +161,4 @@ public class Proceso extends Thread {
     public int getIoExceptionCycle() {
         return ioExceptionCycle;
     }
-    
 }

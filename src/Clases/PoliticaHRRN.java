@@ -9,53 +9,40 @@ package Clases;
  * @author casti
  */
 public class PoliticaHRRN extends Scheduler {
+    public PoliticaHRRN(Cola<Proceso> procesosL, Cola<Proceso> procesosB, Cola<Proceso> procesosT) {
+        super(procesosL, procesosB, procesosT);
+    }
 
-    public PoliticaHRRN(int numCPUs, Cola<Proceso> procesosL, Cola<Proceso> procesosB) {
-        super(numCPUs, procesosL, procesosB);
+    private double calcularRespuesta(Proceso proceso) {
+        return (double) (proceso.getTiempoespera() + proceso.getInstruccionesRestantes()) / proceso.getInstruccionesRestantes();
     }
 
     @Override
     public void asignarProceso() {
-        if (!procesosListos.isEmpty()) {
-            
-            reordenarColaPorHRRN();
-            Proceso procesoSeleccionado = procesosListos.dequeue();
+        if (procesosListos.isEmpty()) {
+            return;
+        }
 
-            CPU cpuLibre = obtenerCPUDisponible();
-            if (cpuLibre != null) {
-                procesoSeleccionado.asignarCPU(cpuLibre);
-            } else {
-                procesosListos.enqueue(procesoSeleccionado);
-            }
+        reorganizarColaPorHRRN();
+
+        CPU cpuDisponible = obtenerCPUDisponible();
+        if (cpuDisponible != null) {
+            Proceso mejorProceso = procesosListos.dequeue();
+            cpuDisponible.ejecutarProceso(mejorProceso);
         }
     }
 
-    public void reordenarColaPorHRRN() {
-        Lista<Proceso> listaDeProcesos = procesosListos.toLista();
-
-        for (int i = 0; i < listaDeProcesos.size(); i++) {
-            for (int j = i + 1; j < listaDeProcesos.size(); j++) {
-                Proceso p1 = listaDeProcesos.get(i);
-                Proceso p2 = listaDeProcesos.get(j);
-
-                int tiempoEspera1 = p1.getTiempoespera();
-                int tiempoEjecucion1 = p1.getInstruccionesRestantes();
-                double responseRatio1 = (double)(tiempoEspera1 + tiempoEjecucion1) / tiempoEjecucion1;
-
-                int tiempoEspera2 = p2.getTiempoespera();
-                int tiempoEjecucion2 = p2.getInstruccionesRestantes();
-                double responseRatio2 = (double)(tiempoEspera2 + tiempoEjecucion2) / tiempoEjecucion2;
-
-                if (responseRatio1 < responseRatio2) {
-                    listaDeProcesos.set(i, p2);
-                    listaDeProcesos.set(j, p1);
-                }
+    private void reorganizarColaPorHRRN() {
+        Lista<Proceso> listaProcesos = procesosListos.toLista();
+        listaProcesos.sort(new Comparator<Proceso>() {
+            @Override
+            public int compare(Proceso p1, Proceso p2) {
+                return Double.compare(calcularRespuesta(p2), calcularRespuesta(p1));
             }
-        }
-
-        procesosListos = new Cola<>(); 
-        for (int i = 0; i < listaDeProcesos.size(); i++) {
-            procesosListos.enqueue(listaDeProcesos.get(i)); 
+        });
+        procesosListos.clear();
+        for (int i = 0; i < listaProcesos.size(); i++) {
+            procesosListos.enqueue(listaProcesos.get(i));
         }
     }
 }

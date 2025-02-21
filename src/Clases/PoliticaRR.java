@@ -11,8 +11,8 @@ package Clases;
 public class PoliticaRR extends Scheduler{
     private int quantum = 5;
 
-    public PoliticaRR(int numCPUs, Cola<Proceso> procesosL, Cola<Proceso> procesosB) {
-        super(numCPUs, procesosL, procesosB);
+    public PoliticaRR(Cola<Proceso> procesosL, Cola<Proceso> procesosB, Cola<Proceso> procesosT) {
+        super(procesosL, procesosB, procesosT);
     }
 
     @Override

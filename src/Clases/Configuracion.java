@@ -10,49 +10,41 @@ import java.io.*;
  *
  * @author casti
  */
-
 public class Configuracion {
     private String rutaArchivo;
 
     public Configuracion(String rutaArchivo) {
         this.rutaArchivo = rutaArchivo;
-        verificarYCrearArchivo();
     }
 
-    public void verificarYCrearArchivo() {
+    public void verificarYCrearArchivo() throws IOException {
         File archivo = new File(rutaArchivo);
         if (!archivo.exists()) {
-            try {
-                archivo.createNewFile();
-                guardarParametros(1000, 2, 10, 1, 5, 3);
-            } catch (IOException e) {
-                e.printStackTrace();
+            archivo.createNewFile();
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivo))) {
+                writer.write("1000\n2\n10\n1\n5\n3\n");
             }
         }
     }
 
     public int[] leerParametros() throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(rutaArchivo));
-        int[] parametros = new int[6]; 
-
-        for (int i = 0; i < parametros.length; i++) {
-            String linea = reader.readLine();
-            if (linea != null) {
-                parametros[i] = Integer.parseInt(reader.readLine());
+        int[] parametros = new int[6];
+        try (BufferedReader reader = new BufferedReader(new FileReader(rutaArchivo))) {
+            for (int i = 0; i < 6; i++) {
+                parametros[i] = Integer.parseInt(reader.readLine().trim());
             }
         }
-        reader.close();
         return parametros;
     }
 
-    public void guardarParametros(int duracionCiclo, int numProcesadores, int instrucciones, int tipoProceso, int ciclosExcepcion, int ciclosEspera) throws IOException {
+    public void guardarParametros(int duracion, int procesadores, int instrucciones, int tipoProceso, int ciclosExcepcion, int ciclosCompletarExcepcion) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(rutaArchivo))) {
-            writer.write(duracionCiclo + "\n");
-            writer.write(numProcesadores + "\n");
+            writer.write(duracion + "\n");
+            writer.write(procesadores + "\n");
             writer.write(instrucciones + "\n");
             writer.write(tipoProceso + "\n");
             writer.write(ciclosExcepcion + "\n");
-            writer.write(ciclosEspera + "\n");
+            writer.write(ciclosCompletarExcepcion + "\n");
         }
     }
 }

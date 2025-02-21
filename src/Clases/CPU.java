@@ -26,9 +26,13 @@ public class CPU {
     public void ejecutarProceso(Proceso proceso) {
         this.procesoActual = proceso;
         System.out.println("🖥️ CPU " + id + " ejecutando proceso " + proceso.getNombre());
-        proceso.start();
+        if (!proceso.isAlive()) {
+            proceso.start();
+        } else {
+            System.out.println("⚠️ Proceso " + proceso.getNombre() + " ya está en ejecución.");
+        }
     }
-    
+
     public void adquirirCPU() throws InterruptedException {
         mutex.acquire();
     }
@@ -41,6 +45,10 @@ public class CPU {
 
     public boolean estaLibre() {
         return procesoActual == null;
+    }
+
+    public Proceso getProcesoActual() {
+        return procesoActual;
     }
 
     public int getId() {

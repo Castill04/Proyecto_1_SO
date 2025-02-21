@@ -5,14 +5,10 @@
  */
 package Clases;
 
-import java.io.IOException;
-import Interfaz.Menu;
 /**
  *
  * @author Ignacio
  */
-public class Main {
-    public static void main(String[] args) throws IOException {
-
-    }
+public interface Comparator<T> {
+    int compare(T o1, T o2);
 }

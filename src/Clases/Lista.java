@@ -57,4 +57,38 @@ public class Lista<T> {
             current = current.getNext();
         }
     }
+    
+    public void sort(Comparator<? super T> comparator) {
+        if (size > 1) {
+            boolean wasChanged;
+            do {
+                Nodo<T> current = head;
+                Nodo<T> previous = null;
+                Nodo<T> next = head.getNext();
+                wasChanged = false;
+                while (next != null) {
+                    if (comparator.compare(current.getData(), next.getData()) > 0) {
+                        wasChanged = true;
+                        if (previous != null) {
+                            Nodo<T> sig = next.getNext();
+                            previous.setNext(next);
+                            next.setNext(current);
+                            current.setNext(sig);
+                        } else {
+                            Nodo<T> sig = next.getNext();
+                            head = next;
+                            next.setNext(current);
+                            current.setNext(sig);
+                        }
+                        previous = next;
+                        next = current.getNext();
+                    } else {
+                        previous = current;
+                        current = next;
+                        next = next.getNext();
+                    }
+                }
+            } while (wasChanged);
+        }
+    }
 }
