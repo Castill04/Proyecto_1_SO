@@ -123,8 +123,6 @@ public class Menu extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         textField2 = new java.awt.TextField();
         jLabel5 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         textField3 = new java.awt.TextField();
@@ -132,6 +130,7 @@ public class Menu extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         textField5 = new java.awt.TextField();
         button1 = new java.awt.Button();
+        jComboBox1 = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         txtCiclosCompletarExcepcion = new javax.swing.JTextField();
@@ -236,27 +235,9 @@ public class Menu extends javax.swing.JFrame {
         jPanel2.add(jLabel5);
         jLabel5.setBounds(30, 120, 210, 16);
 
-        jButton1.setText("Dependiente de E/S");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        jPanel2.add(jButton1);
-        jButton1.setBounds(300, 180, 150, 30);
-
-        jButton2.setText("Dependiente de CPU");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-        jPanel2.add(jButton2);
-        jButton2.setBounds(120, 180, 150, 30);
-
         jLabel6.setText("Dependencia:");
         jPanel2.add(jLabel6);
-        jLabel6.setBounds(30, 180, 210, 16);
+        jLabel6.setBounds(30, 180, 80, 16);
 
         jLabel8.setText("Prioridad:");
         jPanel2.add(jLabel8);
@@ -279,8 +260,22 @@ public class Menu extends javax.swing.JFrame {
         textField5.setBounds(90, 350, 50, 20);
 
         button1.setLabel("Crear");
+        button1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                button1ActionPerformed(evt);
+            }
+        });
         jPanel2.add(button1);
         button1.setBounds(520, 390, 100, 40);
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dependiente de CPU", "Dependiente de E/S" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jComboBox1);
+        jComboBox1.setBounds(130, 180, 320, 22);
 
         jTabbedPane2.addTab("Crear", jPanel2);
 
@@ -421,17 +416,29 @@ public class Menu extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_textField2ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
-
     private void textField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textField4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textField4ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
+        /**ong id = 5;
+        boolean dependencia;
+        String interrupt = "";
+        String solicitud = "";
+        if (jComboBox1.getSelectedItem().toString() == "Dependiente de CPU"){
+            dependencia = true;
+        } else{
+            dependencia = false;
+        }
+        
+        procesosListos.enqueue(new Proceso(id, textField2.getText(), Integer.parseInt(textField1.getText()), dependencia, Integer.parseInt(interrupt), Integer.parseInt(solicitud), 3, 3));
+        id++;**/
+        
+    }//GEN-LAST:event_button1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -469,6 +476,8 @@ public class Menu extends javax.swing.JFrame {
                 procesosListos.enqueue(new Proceso(2, "P2", 15, false, 3, 2, 6, 6));
                 procesosListos.enqueue(new Proceso(3, "P3", 8, true, 0, 0, 5, 5));
                 procesosListos.enqueue(new Proceso(4, "P4", 12, false, 4, 3, 2,7));
+                
+                
 
                 SistemaOperativo so = new SistemaOperativo(2, procesosListos);
                 so.iniciar();
@@ -481,8 +490,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JButton btnConfigurar;
     private javax.swing.JButton btnConfigurar1;
     private java.awt.Button button1;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
